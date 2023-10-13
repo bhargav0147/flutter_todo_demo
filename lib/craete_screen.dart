@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_todo_demo/controller.dart';
 import 'package:get/get.dart';
 
-class CreateAccountScreen extends StatelessWidget {
-  const CreateAccountScreen({super.key});
+class CreateScreen extends StatefulWidget {
+  const CreateScreen({super.key});
 
   @override
+  State<CreateScreen> createState() => _CreateScreenState();
+}
+
+class _CreateScreenState extends State<CreateScreen> {
+   TodoController controller = Get.put(TodoController());
+  @override
   Widget build(BuildContext context) {
-    TodoController controller = Get.put(TodoController());
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Create Account'),
       ),
@@ -22,17 +26,17 @@ class CreateAccountScreen extends StatelessWidget {
             const FlutterLogo(
               size: 100,
             ),
-
+      
             const SizedBox(height: 20),
-
+      
             // Text
             const Text(
               'Create a new account',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-
+      
             const SizedBox(height: 20),
-
+      
             // Email TextField
             Obx(
               () =>  TextField(
@@ -45,9 +49,9 @@ class CreateAccountScreen extends StatelessWidget {
                         borderSide: BorderSide(color: Colors.blue))),
               ),
             ),
-
+      
             const SizedBox(height: 10),
-
+      
             // Password TextField
             Obx(
               () =>  TextField(
@@ -61,9 +65,9 @@ class CreateAccountScreen extends StatelessWidget {
                 obscureText: true,
               ),
             ),
-
+      
             const SizedBox(height: 20),
-
+      
             // Register Button
             ElevatedButton(
               onPressed: () {
@@ -74,13 +78,14 @@ class CreateAccountScreen extends StatelessWidget {
               child:
                   const Text('Register', style: TextStyle(color: Colors.white)),
             ),
-
+      
             const SizedBox(height: 10),
-
+      
             // Already have an account? Sign In TextButton
             TextButton(
               onPressed: () {
                 // Navigate to Sign In screen
+                
                 Get.toNamed('/login');
               },
               child: const Text(

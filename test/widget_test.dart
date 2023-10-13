@@ -13,7 +13,7 @@ import 'package:flutter_todo_demo/craete_screen.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const CreateAccountScreen());
+    await tester.pumpWidget(const CreateScreen());
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
