@@ -12,7 +12,9 @@ async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
   runApp(GetMaterialApp(
+    debugShowCheckedModeBanner: false,
     theme: ThemeData(useMaterial3: true),
+    initialRoute: '/home',
     routes: {
       '/':(p0) => const CreateScreen(),
       '/login':(p0) => const LoginScreen(),
