@@ -14,85 +14,164 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   TodoController controller = Get.put(TodoController());
-  
+
   @override
   void initState() {
     super.initState();
     Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
 
     controller.userId = jwtDecodedToken['_id'];
+    controller.getTodoList(controller.userId);
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'Save Your Todo',
-            style: TextStyle(letterSpacing: 1, color: Colors.black),
+          appBar: AppBar(
+            backgroundColor: Colors.blue,
+            leading: IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.menu_open_rounded,
+                  color: Colors.white,
+                  size: 30,
+                )),
           ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: const Text(
-                    "Create Todo",
-                    style: TextStyle(letterSpacing: 1, color: Colors.black),
-                  ),
-                  actions: [
-                    TextField(
-                      controller: controller.todoTxtTitle.value,
-                      cursorColor: Colors.blue,
-                      decoration: const InputDecoration(
-                          labelText: 'Title',
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.blue))),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text(
+                      "Create Todo",
+                      style: TextStyle(letterSpacing: 1, color: Colors.black),
                     ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: controller.totoTxtDesc.value,
-                      cursorColor: Colors.blue,
-                      decoration: const InputDecoration(
-                          labelText: 'Description',
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.blue))),
-                    ),
-                    const SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        controller.addTodo();
-                        Get.back();
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue),
-                      child: const Text(
-                        'Add',
-                        style: TextStyle(
-                            letterSpacing: 1, color: Colors.white),
+                    actions: [
+                      TextField(
+                        controller: controller.todoTxtTitle.value,
+                        cursorColor: Colors.blue,
+                        decoration: const InputDecoration(
+                            labelText: 'Title',
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue))),
                       ),
-                    )
-                  ],
-                );
-              },
-            );
-          },
-          backgroundColor: Colors.blue,
-          child: const Icon(
-            Icons.add,
-            color: Colors.white,
+                      const SizedBox(height: 10),
+                      TextField(
+                        controller: controller.totoTxtDesc.value,
+                        cursorColor: Colors.blue,
+                        decoration: const InputDecoration(
+                            labelText: 'Description',
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue))),
+                      ),
+                      const SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: () {
+                          controller.addTodo();
+                          Get.back();
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue),
+                        child: const Text(
+                          'Add',
+                          style:
+                              TextStyle(letterSpacing: 1, color: Colors.white),
+                        ),
+                      )
+                    ],
+                  );
+                },
+              );
+            },
+            backgroundColor: Colors.blue,
+            child: const Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
           ),
-        ),
-        body: const Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [FlutterLogo(size: 150,)],
-          ),
-        ),
-      ),
+          body: Stack(
+            children: [
+              Align(
+                alignment: Alignment.topCenter,
+                child: Container(
+                  height: double.infinity,
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    color: Colors.blue,
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.all(15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "ToDo with NodeJS + MongoDB",
+                          style: TextStyle(
+                              letterSpacing: 1,
+                              color: Colors.black,
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          "Total Task",
+                          style: TextStyle(
+                              letterSpacing: 1,
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  height: 580,
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(30))),
+                  child: Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: controller.items == null
+                        ? const Center(
+                          child: CircularProgressIndicator(
+                              color: Colors.blue,
+                            ),
+                        )
+                        : Obx(
+                            () => ListView.builder(
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  title: Text('${controller.items![index]}'),
+                                  trailing: IconButton(
+                                      onPressed: () {},
+                                      icon: const Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
+                                        size: 20,
+                                      )),
+                                  leading: const Icon(
+                                    Icons.note_alt_outlined,
+                                    color: Colors.black,
+                                    size: 20,
+                                  ),
+                                );
+                              },
+                              itemCount: controller.items!.length,
+                            ),
+                          ),
+                  ),
+                ),
+              ),
+            ],
+          )),
     );
   }
 }

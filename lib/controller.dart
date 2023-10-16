@@ -20,7 +20,7 @@ class TodoController extends GetxController {
         "email": txtEmail.value.text,
         "password": txtPassword.value.text,
       };
-      var response =await http.post(Uri.parse(registration),
+      var response = await http.post(Uri.parse(registration),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(registerBody));
       // ignore: avoid_print
@@ -36,7 +36,7 @@ class TodoController extends GetxController {
     } else {
       isnotValid.value = true;
       Get.snackbar("ToDo NodeJS + MongoDb", 'Please Enter Valid Value',
-            backgroundColor: Colors.blue, colorText: Colors.white);
+          backgroundColor: Colors.blue, colorText: Colors.white);
     }
   }
 
@@ -54,7 +54,8 @@ class TodoController extends GetxController {
   }
 
   void loginUser() async {
-    if (txtLoginEmail.value.text.isNotEmpty && txtLoginPassword.value.text.isNotEmpty) {
+    if (txtLoginEmail.value.text.isNotEmpty &&
+        txtLoginPassword.value.text.isNotEmpty) {
       var loginBody = {
         "email": txtLoginEmail.value.text,
         "password": txtLoginPassword.value.text,
@@ -71,39 +72,35 @@ class TodoController extends GetxController {
             backgroundColor: Colors.blue, colorText: Colors.white);
         var myToken = jsonResponse['token'];
         prefs.setString('token', myToken);
-        
+
         Get.offAndToNamed('/home', arguments: myToken);
       } else {
         Get.snackbar("ToDo NodeJS + MongoDb", 'Something Went W̥̥rong',
             backgroundColor: Colors.blue, colorText: Colors.white);
       }
-    }
-    else
-    {
-      isLoginnotValid.value=true;
+    } else {
+      isLoginnotValid.value = true;
       Get.snackbar("ToDo NodeJS + MongoDb", 'Please Enter Valid Value',
-            backgroundColor: Colors.blue, colorText: Colors.white);
+          backgroundColor: Colors.blue, colorText: Colors.white);
     }
   }
 
+  // Add Todo Logic ============================================
 
- // Add Todo Logic ============================================
-
-  
   Rx<TextEditingController> todoTxtTitle = TextEditingController().obs;
   Rx<TextEditingController> totoTxtDesc = TextEditingController().obs;
 
   late String userId;
 
   void addTodo() async {
-    if (todoTxtTitle.value.text.isNotEmpty && totoTxtDesc.value.text.isNotEmpty) {
+    if (todoTxtTitle.value.text.isNotEmpty &&
+        totoTxtDesc.value.text.isNotEmpty) {
       var addTodoBody = {
-        
         "userId": userId,
         "title": todoTxtTitle.value.text,
         "desc": totoTxtDesc.value.text,
       };
-      var response =await http.post(Uri.parse(storeTodo),
+      var response = await http.post(Uri.parse(storeTodo),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(addTodoBody));
       // ignore: avoid_print
@@ -111,8 +108,8 @@ class TodoController extends GetxController {
       if (jsonResponse['status']) {
         Get.snackbar("ToDo NodeJS + MongoDb", 'Create Todo Successfully',
             backgroundColor: Colors.blue, colorText: Colors.white);
-            todoTxtTitle.value.clear();
-            totoTxtDesc.value.clear();
+        todoTxtTitle.value.clear();
+        totoTxtDesc.value.clear();
       } else {
         Get.snackbar("ToDo NodeJS + MongoDb", 'Something Went Wrong',
             backgroundColor: Colors.blue, colorText: Colors.white);
@@ -120,8 +117,38 @@ class TodoController extends GetxController {
     } else {
       isnotValid.value = true;
       Get.snackbar("ToDo NodeJS + MongoDb", 'Please Enter Valid Todo',
-            backgroundColor: Colors.blue, colorText: Colors.white);
+          backgroundColor: Colors.blue, colorText: Colors.white);
     }
   }
 
+  // List View ================================================
+
+  RxList<Map>? items;
+
+  void getTodoList(String uID) async {
+    var getTodoBody = {
+      "userId": uID,
+    };
+    var response = await http.post(Uri.parse(getToDoList),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(getTodoBody));
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      var jsonResponse = jsonDecode(response.body);
+
+      // Check if jsonResponse is a List
+      if (jsonResponse['success'] is List) {
+        // Assign directly to items
+        items = RxList<Map>.from(jsonResponse['success']);
+        print(items?.length);
+      } else {
+        print('Invalid response format. Expected a List.');
+      }
+    } else {
+      print('Request failed with status: ${response.statusCode}');
+    }
+
+    // items = jsonResponse['success'];
+    // print(items?.length);
+  }
 }
