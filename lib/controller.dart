@@ -7,6 +7,10 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class TodoController extends GetxController {
+
+  RxString loading = 'Loading Please Wait...'.obs;
+
+
   // register user Logic ============================================
 
   Rx<TextEditingController> txtEmail = TextEditingController().obs;
@@ -110,6 +114,7 @@ class TodoController extends GetxController {
             backgroundColor: Colors.blue, colorText: Colors.white);
         todoTxtTitle.value.clear();
         totoTxtDesc.value.clear();
+        getTodoList(userId);
       } else {
         Get.snackbar("ToDo NodeJS + MongoDb", 'Something Went Wrong',
             backgroundColor: Colors.blue, colorText: Colors.white);
@@ -125,7 +130,7 @@ class TodoController extends GetxController {
 
   RxList<Map>? items;
 
-  void getTodoList(String uID) async {
+  Future<RxList<Map>?> getTodoList(String uID) async {
     var getTodoBody = {
       "userId": uID,
     };
@@ -142,12 +147,14 @@ class TodoController extends GetxController {
         items = RxList<Map>.from(jsonResponse['success']);
         print(items?.length);
       } else {
-        print('Invalid response format. Expected a List.');
+        Get.snackbar("ToDo NodeJS + MongoDb", 'Invalid response format',
+          backgroundColor: Colors.blue, colorText: Colors.white);
       }
     } else {
-      print('Request failed with status: ${response.statusCode}');
+      Get.snackbar("ToDo NodeJS + MongoDb", 'Somrthing Wrong',
+          backgroundColor: Colors.blue, colorText: Colors.white);
     }
-
+    return items;
     // items = jsonResponse['success'];
     // print(items?.length);
   }

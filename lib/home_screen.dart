@@ -21,7 +21,6 @@ class _HomeScreenState extends State<HomeScreen> {
     Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
 
     controller.userId = jwtDecodedToken['_id'];
-    controller.getTodoList(controller.userId);
   }
 
   @override
@@ -138,38 +137,52 @@ class _HomeScreenState extends State<HomeScreen> {
                       borderRadius:
                           BorderRadius.vertical(top: Radius.circular(30))),
                   child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: controller.items == null
-                        ? const Center(
-                          child: CircularProgressIndicator(
-                              color: Colors.blue,
-                            ),
-                        )
-                        : Obx(
-                            () => ListView.builder(
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  title: Text('${controller.items![index]}'),
-                                  trailing: IconButton(
-                                      onPressed: () {},
-                                      icon: const Icon(
-                                        Icons.delete,
-                                        color: Colors.red,
-                                        size: 20,
-                                      )),
-                                  leading: const Icon(
-                                    Icons.note_alt_outlined,
-                                    color: Colors.black,
-                                    size: 20,
-                                  ),
-                                );
-                              },
-                              itemCount: controller.items!.length,
-                            ),
-                          ),
-                  ),
+                      padding: const EdgeInsets.all(15),
+                      child:  FutureBuilder(
+                          future: controller.getTodoList(controller.userId),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return Center(child: Icon(Icons.error,color: Colors.red,),);
+                            } else if (snapshot.hasData) {
+                              return ListView.builder(
+                                itemBuilder: (context, index) {
+                                  return ListTile(
+                                    title: Text(
+                                        '${controller.items![index]['title']}'),
+                                    trailing: IconButton(
+                                        onPressed: () {
+
+                                          
+                                        },
+                                        icon: const Icon(
+                                          Icons.delete,
+                                          color: Colors.red,
+                                          size: 20,
+                                        )),
+                                    leading: const Icon(
+                                      Icons.note_alt_outlined,
+                                      color: Colors.black,
+                                      size: 20,
+                                    ),
+                                    subtitle: Text(
+                                        '${controller.items![index]['desc']}'),
+                                  );
+                                },
+                                itemCount: controller.items!.length,
+                              );
+                            }
+                            return Center(
+                              child: Text(
+                                controller.loading.value,
+                                style:
+                                    TextStyle(color: Colors.blue, fontSize: 25),
+                              ),
+                            );
+                          },
+                        ),
+                      )),
                 ),
-              ),
+            
             ],
           )),
     );
