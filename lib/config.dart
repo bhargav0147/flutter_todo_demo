@@ -3,3 +3,4 @@ const registration = '${url}register';
 const login = '${url}login';
 const storeTodo = '${url}storeTodo';
 const getToDoList = '${url}getUserTodoList';
+const deleteTodo = '${url}deleteTodo';

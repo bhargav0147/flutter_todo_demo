@@ -155,7 +155,30 @@ class TodoController extends GetxController {
           backgroundColor: Colors.blue, colorText: Colors.white);
     }
     return items;
-    // items = jsonResponse['success'];
-    // print(items?.length);
+   }
+
+
+
+  // Delete Todo ================================================
+
+  Future<void> deleteToDo (id)
+  async {
+    print(id);
+    var loginBody = {
+        "id": id,
+      };
+
+      var response = await http.post(Uri.parse(deleteTodo),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(loginBody));
+
+      var jsonResponse = jsonDecode(response.body);
+
+      if (jsonResponse['success']==true) {
+         getTodoList(userId);
+      }
+
+     
   }
+
 }

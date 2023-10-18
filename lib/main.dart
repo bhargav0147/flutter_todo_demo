@@ -14,7 +14,7 @@ async {
   runApp(GetMaterialApp(
     debugShowCheckedModeBanner: false,
     theme: ThemeData(useMaterial3: true),
-    initialRoute: '/home',
+    initialRoute: '/',
     routes: {
       '/':(p0) => const CreateScreen(),
       '/login':(p0) => const LoginScreen(),

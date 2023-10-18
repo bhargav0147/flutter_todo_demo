@@ -142,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           future: controller.getTodoList(controller.userId),
                           builder: (context, snapshot) {
                             if (snapshot.hasError) {
-                              return Center(child: Icon(Icons.error,color: Colors.red,),);
+                              return const Center(child: Icon(Icons.error,color: Colors.red,),);
                             } else if (snapshot.hasData) {
                               return ListView.builder(
                                 itemBuilder: (context, index) {
@@ -151,8 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         '${controller.items![index]['title']}'),
                                     trailing: IconButton(
                                         onPressed: () {
-
-                                          
+                                          controller.deleteToDo(controller.items![index]['_id']);
                                         },
                                         icon: const Icon(
                                           Icons.delete,
@@ -175,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Text(
                                 controller.loading.value,
                                 style:
-                                    TextStyle(color: Colors.blue, fontSize: 25),
+                                    const TextStyle(color: Colors.blue, fontSize: 25),
                               ),
                             );
                           },
